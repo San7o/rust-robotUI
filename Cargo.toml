@@ -14,3 +14,4 @@ opt-level = 3
 robotics_lib = { version = "0.1.19", registry = "kellnr" }
 bevy = "0.11.3"
 bevy_ecs_tilemap = "0.11.1"
+rand = "0.8.5"

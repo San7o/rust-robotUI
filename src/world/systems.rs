@@ -10,6 +10,13 @@ use bevy_ecs_tilemap::prelude::TileBundle;
 use bevy_ecs_tilemap::prelude::TilemapId;
 use bevy_ecs_tilemap::prelude::TilemapTileSize;
 use bevy_ecs_tilemap::prelude::TilemapType;
+use bevy_ecs_tilemap::tiles::TileTextureIndex;
+
+use robotics_lib::world::tile::Tile;
+use robotics_lib::world::tile::TileType;
+use robotics_lib::world::tile::Content;
+use robotics_lib::interface::robot_map;
+
 
 pub fn spawn_world(
     mut commands: Commands,
@@ -17,12 +24,34 @@ pub fn spawn_world(
     asset_server: Res<AssetServer>,
     #[cfg(all(not(feature = "atlas"), feature = "render"))]
     array_texture_loader: Res<ArrayTextureLoader,>,
+    world: ResMut<WorldRes>,
 ) {
+    
+
+    let tile = Tile {
+        tile_type: TileType::Grass,
+        content:  Content::Garbage(2),
+        elevation: 20,
+    };
+
+    let mut dummy_map: Vec<Vec<Option<Tile>>> = Vec::new();
+    for i in 0..5 {
+        dummy_map.push(Vec::new());
+        for j in 0..5 {
+            dummy_map[i].push(Some(tile.clone()));
+        }
+    }
+
+    let dummy_map_size = 5;
+
+   let map = robot_map(&world.world).unwrap(); 
+
+
 
     let window = window_query.get_single().unwrap();
     let texture_handle: Handle<Image> = asset_server.load("tiles2.png");
 
-    let map_size = TilemapSize { x: 32, y: 32 };
+    let map_size = TilemapSize { x: dummy_map_size, y: dummy_map_size };
 
     // Create a tilemap entity a little early.
     // We want this entity early because we need to tell each tile which tilemap entity
@@ -41,11 +70,25 @@ pub fn spawn_world(
     // Alternatively, you can use helpers::filling::fill_tilemap.
     for x in 0..map_size.x {
         for y in 0..map_size.y {
+            let texture_index = TileTextureIndex(match &dummy_map[x as usize][y as usize] {
+                Some(tile) => {
+                    match tile.tile_type {
+                        TileType::Grass => 0,
+                        TileType::Sand => 1,
+                        _ => 3,
+                    }
+                },
+                None => 0,
+            }); 
+            // Make all the textures
+            // todo!();
+
             let tile_pos = TilePos { x, y };
             let tile_entity = commands
                 .spawn(TileBundle {
                     position: tile_pos,
                     tilemap_id: TilemapId(tilemap_entity),
+                    texture_index: texture_index,
                     ..Default::default()
                 })
                 .id();
