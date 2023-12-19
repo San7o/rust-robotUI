@@ -31,8 +31,9 @@ pub fn render_map(
     #[cfg(all(not(feature = "atlas"), feature = "render"))]
     array_texture_loader: Res<ArrayTextureLoader,>,
 ) {
-    
-   println!("Trying to render"); 
+        
+    // TODO This is too slow
+
     let map1 = match world.rx.lock().unwrap().try_recv() {
          Ok(w) => Some(w),
          Err(_) => None,
@@ -45,18 +46,6 @@ pub fn render_map(
         elevation: 20,
     };
 
-    /*
-    let mut dummy_map: Vec<Vec<Option<Tile>>> = Vec::new();
-    for i in 0..5 {
-        dummy_map.push(Vec::new());
-        for j in 0..5 {
-            dummy_map[i].push(Some(tile.clone()));
-        }
-    }
-
-    let dummy_map_size = 5;
-    */
-   
     if let None = map1 {
         return;
     }

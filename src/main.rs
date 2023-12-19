@@ -35,13 +35,15 @@ fn main() {
     let wr = WorldRes {
         world: None,
         rx: Mutex::new(rx),
+        player_x: 0,
+        player_y: 0,
     };
 
     let r = MyRobot(Robot::new(), Mutex::new(tx));
     struct Tool;
     impl Tools for Tool {}
     let tools = vec![Tool];
-    let mut generator = WorldGenerator::init(10); // Map size
+    let mut generator = WorldGenerator::init(20); // Map size
     let run = Runner::new(Box::new(r), &mut generator).unwrap(); // TODO: link tools
 
     App::new()
@@ -53,8 +55,15 @@ fn main() {
             .set(ImagePlugin::default_nearest()) // Clear Pixels
             .set(LogPlugin {
             filter: "mygame=debug".into(),
-            level: bevy::log::Level::ERROR,
-        }))
+            level: bevy::log::Level::ERROR,})
+            .set(WindowPlugin {
+                    primary_window: Some(Window {
+                        title: String::from("Robot UI"),
+                        ..Default::default()
+                    }),
+                    ..default()
+                })
+            )
         .add_plugins(CameraPlugin)
         .add_plugins(TilemapPlugin)
         .add_plugins(WorldPlugin)

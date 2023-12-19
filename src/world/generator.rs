@@ -99,7 +99,7 @@ impl Generator for WorldGenerator {
 
         let max_score = rand::random::<f32>();
 
-        (map, (5, 5), environmental_conditions, max_score, None)
+        (map, (self.size / 2, self.size / 2), environmental_conditions, max_score, None)
     }
 }
 

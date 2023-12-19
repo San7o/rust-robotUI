@@ -14,6 +14,13 @@ use robotics_lib::world::tile::Tile;
 use robotics_lib::interface::robot_map;
 use std::sync::mpsc::Sender;
 use std::sync::Mutex;
+use rand::Rng;
+use crate::Timer;
+
+#[derive(Resource)]
+pub struct TickTimer {
+    pub timer: Timer,
+}
 
 pub struct MyRobot(pub Robot, pub Mutex<Sender<Vec<Vec<Option<Tile>>>>>);
 
@@ -21,19 +28,35 @@ impl Runnable for MyRobot {
     fn process_tick(&mut self, world: &mut World) {
         println!("CIAOOOO");
 
-
-        match go_allowed(self, &world, &Direction::Down) {
+        // Go right
+         match go_allowed(self, &world, &Direction::Right) {
             Ok(_) => {
-                go(self, world, Direction::Down);
+                go(self, world, Direction::Right);
             },
             Err(_) => {},
         }
 
+
+        /*
+        // GO in random directions 
+        let mut rng = rand::thread_rng();
+        let idir = rng.gen_range(0..4);
+        let dir = match idir {
+            0 => Direction::Up,
+            1 => Direction::Down,
+            2 => Direction::Left,
+            _ => Direction::Right,
+        };
+        match go_allowed(self, &world, &dir) {
+            Ok(_) => {
+                go(self, world, dir);
+            },
+            Err(_) => {},
+        }
+        */ 
+
          let map = robot_map(&world); 
         self.1.lock().unwrap().send(map.unwrap());
-
-        
-
 
     }
 
