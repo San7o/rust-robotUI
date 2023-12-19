@@ -1,14 +1,16 @@
 use bevy::prelude::*;
-use crate::world::systems::spawn_world;
+use crate::world::systems::render_map;
 
-mod components;
-mod systems;
+pub mod components;
+pub mod systems;
+pub mod resources;
+pub mod generator;
+
 pub struct WorldPlugin;
 
 impl Plugin for WorldPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(Startup, spawn_world);
-//            .add_systems(Update, render_world);
+            .add_systems(Update, render_map);
     }
 }

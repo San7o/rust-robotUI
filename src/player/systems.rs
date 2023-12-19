@@ -1,6 +1,12 @@
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use crate::player::components::Player;
+use robotics_lib::runner::Runnable;
+use robotics_lib::runner::Runner;
+use robotics_lib::interface::Tools;
+use robotics_lib::runner::Robot;
+use std::sync::Arc;
+use crate::WorldRes;
 
 pub const PLAYER_SIZE : f32 = 32.0;
 
@@ -35,4 +41,23 @@ pub fn spawn_player(
             Player{},
         )
     );
+}
+
+/*
+impl Runner {
+    pub fn get_world(&self) -> Option<Vec<Vec<i32>>> {
+        robot_map(self.world)
+    }
+}
+*/ 
+
+pub fn tick_loop (
+    mut world_query: ResMut<WorldRes>,
+    mut runner_query: NonSendMut<Runner>,
+) {
+
+    runner_query.game_tick();
+    let robot = runner_query.get_robot();
+    //let num = robot.1;
+    //println!("IL numero fortunato è: {}", num);
 }

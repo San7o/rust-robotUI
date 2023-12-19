@@ -1,4 +1,3 @@
-
 // use rand::Rng;
 use robotics_lib::energy::Energy;
 use robotics_lib::event::events::Event;

@@ -16,16 +16,27 @@ use robotics_lib::world::tile::Tile;
 use robotics_lib::world::tile::TileType;
 use robotics_lib::world::tile::Content;
 use robotics_lib::interface::robot_map;
+use bevy::prelude::Resource;
+use crate::world::resources::WorldRes;
+use robotics_lib::runner::Runnable;
+use crate::world::components::TileDraw;
+use crate::world::components::GridDraw;
 
-
-pub fn spawn_world(
+pub fn render_map(
     mut commands: Commands,
+    mut world: ResMut<WorldRes>,
+    rendered_map: Query<Entity, (With<TileDraw>, With<GridDraw>)>,
     window_query: Query<&Window, With<PrimaryWindow>>,
     asset_server: Res<AssetServer>,
     #[cfg(all(not(feature = "atlas"), feature = "render"))]
     array_texture_loader: Res<ArrayTextureLoader,>,
-    world: ResMut<WorldRes>,
 ) {
+    
+   println!("Trying to render"); 
+    let map1 = match world.rx.lock().unwrap().try_recv() {
+         Ok(w) => Some(w),
+         Err(_) => None,
+    };
     
 
     let tile = Tile {
@@ -34,6 +45,7 @@ pub fn spawn_world(
         elevation: 20,
     };
 
+    /*
     let mut dummy_map: Vec<Vec<Option<Tile>>> = Vec::new();
     for i in 0..5 {
         dummy_map.push(Vec::new());
@@ -43,15 +55,19 @@ pub fn spawn_world(
     }
 
     let dummy_map_size = 5;
+    */
+   
+    if let None = map1 {
+        return;
+    }
+    let map = &map1.clone().unwrap();
 
-   let map = robot_map(&world.world).unwrap(); 
-
-
+    let map_size = map.len();
 
     let window = window_query.get_single().unwrap();
     let texture_handle: Handle<Image> = asset_server.load("tiles2.png");
 
-    let map_size = TilemapSize { x: dummy_map_size, y: dummy_map_size };
+    let map_size = TilemapSize { x: map_size as u32, y: map_size as u32 };
 
     // Create a tilemap entity a little early.
     // We want this entity early because we need to tell each tile which tilemap entity
@@ -70,7 +86,7 @@ pub fn spawn_world(
     // Alternatively, you can use helpers::filling::fill_tilemap.
     for x in 0..map_size.x {
         for y in 0..map_size.y {
-            let texture_index = TileTextureIndex(match &dummy_map[x as usize][y as usize] {
+            let texture_index = TileTextureIndex(match &map[x as usize][y as usize] {
                 Some(tile) => {
                     match tile.tile_type {
                         TileType::Grass => 0,
@@ -78,19 +94,21 @@ pub fn spawn_world(
                         _ => 3,
                     }
                 },
-                None => 0,
+                None => 3,
             }); 
             // Make all the textures
             // todo!();
 
             let tile_pos = TilePos { x, y };
             let tile_entity = commands
-                .spawn(TileBundle {
+                .spawn((
+                    TileBundle {
                     position: tile_pos,
                     tilemap_id: TilemapId(tilemap_entity),
                     texture_index: texture_index,
                     ..Default::default()
-                })
+                },
+                TileDraw{}))
                 .id();
             tile_storage.set(&tile_pos, tile_entity);
         }
@@ -99,8 +117,13 @@ pub fn spawn_world(
     let tile_size = TilemapTileSize { x: 16.0, y: 16.0 };
     let grid_size = tile_size.into();
     let map_type = TilemapType::default();
-
-    commands.entity(tilemap_entity).insert(TilemapBundle {
+    
+    // Despawn ond maps
+    for e in &rendered_map {
+        commands.entity(e).despawn();
+    }
+    // Spawn new map
+    commands.entity(tilemap_entity).insert((TilemapBundle {
         grid_size,
         map_type,
         size: map_size,
@@ -109,7 +132,8 @@ pub fn spawn_world(
         tile_size,
         transform: get_tilemap_center_transform(&map_size, &grid_size, &map_type, 0.0),
         ..Default::default()
-    });
+    },
+    GridDraw{}));
 
     // Add atlas to array texture loader so it's preprocessed before we need to use it.
     // Only used when the atlas feature is off and we are using array textures.
