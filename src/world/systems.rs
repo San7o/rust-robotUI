@@ -88,7 +88,7 @@ pub fn spawn_map(
     
 
     let window = window_query.get_single().unwrap();
-    let texture_handle: Handle<Image> = asset_server.load("tiles2.png");
+    let texture_handle: Handle<Image> = asset_server.load("tiles4.png");
 
     // Create a tilemap entity a little early.
     // We want this entity early because we need to tell each tile which tilemap entity
@@ -115,7 +115,7 @@ pub fn spawn_map(
                     TileBundle {
                     position: tile_pos,
                     tilemap_id: TilemapId(tilemap_entity),
-                    texture_index: TileTextureIndex(3), // Here the None texture index 
+                    texture_index: TileTextureIndex(12), // Here the None texture index 
                     ..Default::default()
                 },
                 TileDraw{}))
@@ -151,7 +151,7 @@ pub fn spawn_map(
     #[cfg(all(not(feature = "atlas"), feature = "render"))]
     {
         array_texture_loader.add(TilemapArrayTexture {
-            texture: TilemapTexture::Single(asset_server.load("grass_pixelart.png")),
+            texture: TilemapTexture::Single(asset_server.load("tiles2.png")),
             tile_size,
             ..Default::default()
         });
@@ -183,7 +183,7 @@ pub fn update_map(
     let (map, (robot_x, robot_y)) = res.unwrap();
     let map_size = world.world_size;
 
-    // Dummy tile
+    // Dummy tile TODO can be removed
     let tile = Tile {
         tile_type: TileType::Grass,
         content:  Content::Garbage(2),
@@ -191,7 +191,7 @@ pub fn update_map(
     };
     
 
-    let texture_handle: Handle<Image> = asset_server.load("tiles2.png");
+    // let texture_handle: Handle<Image> = asset_server.load("tiles2.png");
 
     // TODO Add multiple layers (content)
     let mut tile_map = &mut tile_storage.get_single_mut().unwrap();
@@ -473,7 +473,7 @@ fn get_texture_id(tile: &Option<Tile>) -> u32 {
     match tile {         
         Some(tile) => {
             match tile.tile_type {
-                TileType::Grass => 0,
+                TileType::Grass => 3,
                 TileType::Sand => 1,
                 _ => 3,
             }

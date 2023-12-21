@@ -13,6 +13,7 @@ impl Plugin for WorldPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_systems(Startup, spawn_map)
-            .add_systems(Update, update_map);
+            .add_systems(Update, update_map)
+           ;
     }
 }

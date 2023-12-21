@@ -5,6 +5,8 @@ use crate::camera::components::CameraMaker;
 use crate::MyRobot;
 use crate::player::components::Player;
 
+pub const CAMERA_SPEED : f32 = 250.0;
+
 pub fn zoom_scalingmode(
     keyboard_input: Res<Input<KeyCode>>,
     mut camera_query: Query<&mut OrthographicProjection, With<CameraMaker>>,
@@ -56,3 +58,45 @@ pub fn follow_robot(
         camera_transform.translation.y = robot_transform.translation.y;
     }
 }
+
+
+pub fn camera_movement(
+    keyboard_input: Res<Input<KeyCode>>,
+    // A query matches only the entities that fit the specification
+    // It returns an iterator
+    mut camera_query: Query<&mut Transform, With<CameraMaker>>,
+    time: Res<Time>,
+)
+{
+    // The player might not exist
+    if let Ok(mut transform) = camera_query.get_single_mut() {
+
+        // We are using a direction vector so get the overall direction
+        let mut direction = Vec3::ZERO;
+
+        // This is how you register keyboard input
+        if keyboard_input.pressed(KeyCode::Left) || keyboard_input.pressed(KeyCode::A) {
+            direction += Vec3::new(-1.0, 0.0, 0.0);
+        }
+        if keyboard_input.pressed(KeyCode::Right) || keyboard_input.pressed(KeyCode::D) {
+            direction += Vec3::new(1.0, 0.0, 0.0);
+        }
+        if keyboard_input.pressed(KeyCode::Up) || keyboard_input.pressed(KeyCode::W) {
+            direction += Vec3::new(0.0, 1.0, 0.0);
+        }
+        if keyboard_input.pressed(KeyCode::Down) || keyboard_input.pressed(KeyCode::S) {
+            direction += Vec3::new(0.0, -1.0, 0.0);
+        }
+
+        // If the direction vector is not null
+        if direction.length() > 0.0 {
+            // We normalize to make sure that the diagonals move as far
+            // as horizontal or vertical axes movement
+            direction = direction.normalize();
+        }
+
+        // Adding the direction
+        transform.translation += direction * CAMERA_SPEED * time.delta_seconds();
+    }
+}
+
