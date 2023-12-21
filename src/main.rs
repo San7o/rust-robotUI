@@ -29,21 +29,24 @@ use std::sync::mpsc;
 use std::thread;
 use std::sync::Mutex;
 
+const WORLD_SIZE : usize = 20;
+
 fn main() {
     
-    let (tx, rx) = mpsc::channel::<Vec<Vec<Option<Tile>>>>();
+    let (tx, rx) = mpsc::channel::<(Vec<Vec<Option<Tile>>>, (usize, usize))>();
     let wr = WorldRes {
         world: None,
         rx: Mutex::new(rx),
         player_x: 0,
         player_y: 0,
+        world_size: WORLD_SIZE,
     };
 
     let r = MyRobot(Robot::new(), Mutex::new(tx));
     struct Tool;
     impl Tools for Tool {}
     let tools = vec![Tool];
-    let mut generator = WorldGenerator::init(20); // Map size
+    let mut generator = WorldGenerator::init(WORLD_SIZE);
     let run = Runner::new(Box::new(r), &mut generator).unwrap(); // TODO: link tools
 
     App::new()

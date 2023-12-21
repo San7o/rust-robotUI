@@ -16,28 +16,30 @@ use std::sync::mpsc::Sender;
 use std::sync::Mutex;
 use rand::Rng;
 use crate::Timer;
+use robotics_lib::interface::where_am_i;
 
 #[derive(Resource)]
 pub struct TickTimer {
     pub timer: Timer,
 }
 
-pub struct MyRobot(pub Robot, pub Mutex<Sender<Vec<Vec<Option<Tile>>>>>);
+pub struct MyRobot(pub Robot, pub Mutex<Sender<(Vec<Vec<Option<Tile>>>, (usize, usize))>>);
 
 impl Runnable for MyRobot {
     fn process_tick(&mut self, world: &mut World) {
         println!("CIAOOOO");
 
-        // Go right
-         match go_allowed(self, &world, &Direction::Right) {
+        /*
+        // Go a direction
+        let dir = Direction::Down;
+         match go_allowed(self, &world, &dir) {
             Ok(_) => {
-                go(self, world, Direction::Right);
+                self.go_ui(world, dir);
             },
             Err(_) => {},
         }
+*/
 
-
-        /*
         // GO in random directions 
         let mut rng = rand::thread_rng();
         let idir = rng.gen_range(0..4);
@@ -49,15 +51,10 @@ impl Runnable for MyRobot {
         };
         match go_allowed(self, &world, &dir) {
             Ok(_) => {
-                go(self, world, dir);
+                self.go_ui(world, dir);
             },
             Err(_) => {},
         }
-        */ 
-
-         let map = robot_map(&world); 
-        self.1.lock().unwrap().send(map.unwrap());
-
     }
 
     fn handle_event(&mut self, event: Event) {
@@ -86,3 +83,10 @@ impl Runnable for MyRobot {
     }
 }
 
+impl MyRobot {
+    fn go_ui(&mut self, world: &mut World, direction: Direction) {
+        let _ = go(self, world, direction);
+        let view = where_am_i(self, world);
+        let _ = self.1.lock().unwrap().send(view);
+    }
+}

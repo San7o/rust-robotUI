@@ -11,7 +11,8 @@ use std::sync::Mutex;
 #[derive(Resource)]
 pub struct WorldRes {
     pub world: Option<Vec<Vec<Option<Tile>>>>,
-    pub rx: Mutex<Receiver<Vec<Vec<Option<Tile>>>>>,
+    pub rx: Mutex<Receiver<(Vec<Vec<Option<Tile>>>, (usize, usize))>>,
+    pub world_size: usize,
     pub player_x: usize,
     pub player_y: usize,
 }

@@ -14,10 +14,11 @@ use bevy::prelude::Transform;
 
 // pub const PLAYER_SIZE : f32 = 32.0;
 
-// TODO Those only work in a 10 by 10 map
 const FACTOR :f32 = 16.0;
-const TRANSLATE_Y : f32 = -72.0;
-const TRANSLATE_X : f32 = -72.0;
+
+// Fine tuded by hand to rowk on a 30x30 world
+const TRANSLATE_Y : f32 = -7.6;
+const TRANSLATE_X : f32 = -7.6;
 
 
 // This is a system
@@ -74,15 +75,16 @@ pub fn move_player(
     // New Coordinates
     let new_x = world_res.player_x;
     let new_y = world_res.player_y;
-    println!("NEw x: {}, New y: {}, oldx; {}, old_y: {}", new_x, new_y, old_x, old_y);
+    // println!("NEw x: {}, New y: {}, oldx; {}, old_y: {}", new_x, new_y, old_x, old_y);
 
-    if old_x != new_x as f32 * FACTOR + TRANSLATE_X || old_y != new_y as f32 * FACTOR + TRANSLATE_Y {
+    if old_x != new_y as f32 * FACTOR + TRANSLATE_X || -1.0 * old_y as f32 != new_x as f32 * FACTOR + TRANSLATE_Y {
     // Calculate the translation
         // TODO Accound for matrix world position 
     // Disabled tranition
-        player.translation.x = new_x as f32 * FACTOR + TRANSLATE_X;
-        player.translation.y = new_y as f32 * FACTOR + TRANSLATE_Y;
-
+    // Coordinates are swapped because of different coordinate system
+        player.translation.x = new_y as f32 * FACTOR + TRANSLATE_X * world_res.world_size as f32;
+        player.translation.y = new_x as f32 * FACTOR + TRANSLATE_Y * world_res.world_size as f32;
+        player.translation.y *= -1.0;
     }
   }
 
@@ -96,7 +98,7 @@ pub fn tick_loop (
     timer.timer.tick(time.delta());
 
     if timer.timer.finished() {
-        runner_query.game_tick();
+        let _ = runner_query.game_tick();
         
         let robot = runner_query.get_robot();
         // Update player coordinates
