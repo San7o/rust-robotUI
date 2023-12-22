@@ -4,6 +4,7 @@ use bevy::render::camera::ScalingMode;
 use crate::camera::components::CameraMaker;
 use crate::MyRobot;
 use crate::player::components::Player;
+use bevy::core_pipeline::clear_color::ClearColorConfig;
 
 pub const CAMERA_SPEED : f32 = 250.0;
 
@@ -37,6 +38,7 @@ pub fn spawn_camera(
     };
     // Zooming 
     camera.projection.scale /= 5.0;
+    camera.camera_2d.clear_color = ClearColorConfig::Custom(Color::rgba_u8(31, 19, 2, 1));
     commands.spawn(
         (
             camera,   

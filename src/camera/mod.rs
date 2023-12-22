@@ -3,6 +3,7 @@ use crate::camera::systems::spawn_camera;
 use crate::camera::systems::zoom_scalingmode;
 use crate::camera::systems::follow_robot;
 use crate::camera::systems::camera_movement;
+use crate::AppState;
 
 pub mod components;
 pub mod systems;
@@ -15,9 +16,13 @@ impl Plugin for CameraPlugin {
             // Startup
             .add_systems(Startup, spawn_camera)
             // Update 
-            .add_systems(Update, zoom_scalingmode)
-            .add_systems(Update, follow_robot)
-            .add_systems(Update, camera_movement)
-            ;
+            .add_systems(Update, 
+                (
+                    zoom_scalingmode, 
+                    follow_robot,
+                    camera_movement,
+                )
+                .run_if(in_state(AppState::Game))
+            );
     }
 }

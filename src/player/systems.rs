@@ -104,6 +104,26 @@ pub fn change_tick_speed(
 
 }
 
+pub fn pause_tick(
+    keyboard_input: Res<Input<KeyCode>>,
+    mut timer_res: ResMut<TickTimer> 
+) {
+    if keyboard_input.pressed(KeyCode::P) {
+        timer_res.timer.pause();
+    }
+}
+
+pub fn unpause_tick(
+    keyboard_input: Res<Input<KeyCode>>,
+    mut timer_res: ResMut<TickTimer> 
+) {
+    if keyboard_input.pressed(KeyCode::O) {
+        if timer_res.timer.paused() {
+            timer_res.timer.unpause();
+        }
+    }
+}
+
 pub fn tick_loop (
     mut world_res: ResMut<WorldRes>,
     mut runner_query: NonSendMut<Runner>,
