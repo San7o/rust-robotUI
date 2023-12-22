@@ -1,11 +1,13 @@
 use bevy::prelude::*;
 use crate::AppState;
 use bevy::app::AppExit;
+use bevy_kira_audio::Audio;
+use bevy_kira_audio::AudioControl;
 
 pub fn exit_game(
     keyboard_input: Res<Input<KeyCode>>,
     // We use EventWriter<T> to send an event
-    // adn EventReader<T> to receive events
+    // and EventReader<T> to receive events
     mut app_exit_event_writer: EventWriter<AppExit>,
 ) {
     if keyboard_input.just_pressed(KeyCode::Escape) {
@@ -25,4 +27,11 @@ pub fn transition_to_game_state(
             println!("Entered Appstate::Game");
         }
     }
+}
+
+pub fn background_music(
+    asset_server: Res<AssetServer>,
+    audio: Res<Audio>
+) {
+    audio.play(asset_server.load("audio/reflected-light.mp3")).looped();
 }

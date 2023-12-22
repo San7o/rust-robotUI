@@ -11,6 +11,8 @@ use crate::player::resources::MyRobot;
 use crate::main_menu::MainMenuPlugin;
 use crate::systems::transition_to_game_state;
 use crate::systems::exit_game;
+use crate::systems::background_music;
+use bevy_kira_audio::AudioPlugin;
 
 mod player;
 mod camera;
@@ -84,12 +86,14 @@ fn main() {
                     ..default()
                 })
             )
+        .add_plugins(AudioPlugin) // Bevy Kira Audio
         .add_plugins(MainMenuPlugin)
         .add_plugins(CameraPlugin)
         .add_plugins(TilemapPlugin)
         .add_plugins(WorldPlugin)
         .add_plugins(PlayerPlugin)
         // Systems 
+        .add_systems(Startup, background_music)
         .add_systems(Update, 
             (
                 exit_game,

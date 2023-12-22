@@ -16,10 +16,11 @@ bevy_ecs_tilemap = "0.11.1"
 rand = "0.8.5"
 bevy = { version = "0.11.3", features = [
     "animation",
+#    "bevy_audio",
     "bevy_asset",
     "bevy_gilrs",
     "bevy_scene",
-#    "bevy_winit",
+    "bevy_winit",
     "bevy_core_pipeline",
     "bevy_pbr",
     "bevy_gltf",
@@ -41,3 +42,5 @@ bevy = { version = "0.11.3", features = [
     "default_font",
     "webgl2",
 ]}
+bevy_kira_audio = { version = "0.17.0", features = ["ogg", "mp3"] }
+
