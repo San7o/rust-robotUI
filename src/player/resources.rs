@@ -55,6 +55,13 @@ impl Runnable for MyRobot {
             },
             Err(_) => {},
         }
+      
+        /*
+        // Do nothing
+        let view = where_am_i(self, world);
+        let _ = self.1.lock().unwrap().send(view);
+        */
+
     }
 
     fn handle_event(&mut self, event: Event) {

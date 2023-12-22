@@ -46,7 +46,7 @@ pub fn spawn_player(
             // To know: Do not use bundles as queries! 
             SpriteBundle {
                 // transform : Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 0.0),
-                transform : Transform::from_xyz(5.0, 0.0, 1.0),
+                transform : Transform::from_xyz(5.0, 0.0, 2.0),
                 texture: asset_server.load("robot_pixelart.png"), 
                 ..default()
             },
@@ -86,7 +86,23 @@ pub fn move_player(
         player.translation.y = new_x as f32 * FACTOR + TRANSLATE_Y * world_res.world_size as f32;
         player.translation.y *= -1.0;
     }
-  }
+}
+
+pub fn change_tick_speed(
+    keyboard_input: Res<Input<KeyCode>>,
+    mut timer_res: ResMut<TickTimer> 
+) {
+
+    if keyboard_input.pressed(KeyCode::Z) {
+        timer_res.timer.set_duration(Duration::from_millis(100));
+    }
+
+
+    if keyboard_input.pressed(KeyCode::X) {
+        timer_res.timer.set_duration(Duration::from_secs(1));
+    }
+
+}
 
 pub fn tick_loop (
     mut world_res: ResMut<WorldRes>,

@@ -36,7 +36,7 @@ pub fn spawn_camera(
         ..default()
     };
     // Zooming 
-    camera.projection.scale /= 3.0;
+    camera.projection.scale /= 5.0;
     commands.spawn(
         (
             camera,   

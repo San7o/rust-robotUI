@@ -18,8 +18,7 @@ use robotics_lib::world::tile::{Content, Tile, TileType};
 use robotics_lib::world::world_generator::Generator;
 use robotics_lib::world::World;
 use std::collections::HashMap;
-
-
+use rand::Rng;
 
 pub struct WorldGenerator {
     size: usize,
@@ -39,34 +38,30 @@ impl Generator for WorldGenerator {
         f32,
         Option<HashMap<Content, f32>>,
     ) {
-        // let mut rng = rand::thread_rng();
+
+        // Random Generator
+        let mut rng = rand::thread_rng();
         let mut map: Vec<Vec<Tile>> = Vec::new();
         // Initialize the map with default tiles
         for x in 0..self.size {
             let mut row: Vec<Tile> = Vec::new();
             for y in 0..self.size {
-                // let i_tiletype = rng.gen_range(0..TileType::iter().len());
-                // let i_content = rng.gen_range(0..Content::iter().len());
-                let i_tiletype = 3; // only grass
-                let i_content =
-                    if
-                    (x == 2 && y == 4) ||
-                        (x == 5 && y == 1) ||
-                        (x == 0 && y == 0) ||
-                        (x == 8 && y == 1) ||
-                        (x == 8 && y == 7) { 1 } else { 0 }; // Only rock
+                let i_tiletype = rng.gen_range(10..50);
+                let i_content = rng.gen_range(0..5);
+                //let i_tiletype = 3; // only grass
+                //let i_content = 0;
                 let tile_type = match i_tiletype {
-                    | 0 => DeepWater,
-                    | 1 => ShallowWater,
-                    | 2 => Sand,
-                    | 3 => Grass,
-                    | 4 => Street,
-                    | 5 => Hill,
-                    | 6 => Mountain,
-                    | 7 => Snow,
-                    | 8 => Lava,
-                    | 9 => Teleport(false),
-                    | _ => Grass,
+                    | 0 => TileType::DeepWater,
+                    | 1 => TileType::ShallowWater,
+                    | 2 => TileType::Sand,
+                    | 3 => TileType::Grass,
+                    | 4 => TileType::Street,
+                    | 5 => TileType::Hill,
+                    | 6 => TileType::Mountain,
+                    | 7 => TileType::Snow,
+                    | 8 => TileType::Lava,
+                    | 9 => TileType::Teleport(false),
+                    | _ => TileType::Grass,
                 };
                 let content = match i_content {
                     | 0 => Rock(3),
@@ -98,6 +93,73 @@ impl Generator for WorldGenerator {
         let environmental_conditions = EnvironmentalConditions::new(&[Sunny, Rainy], 15, 12).unwrap();
 
         let max_score = rand::random::<f32>();
+
+        // Test Map
+/*
+        let mut map: Vec<Vec<Tile>> = Vec::new();
+        self.size = 3;
+       map.push(Vec::new());
+       map.push(Vec::new());
+       map.push(Vec::new());
+        let top_left = Tile{
+            tile_type: TileType::Grass,
+            content: Content::None,
+            elevation: 0,
+        };
+         let top = Tile{
+            tile_type: TileType::Grass,
+            content: Content::None,
+            elevation: 0,
+        };
+          let top_right = Tile{
+            tile_type: TileType::Grass,
+            content: Content::Rock(1),
+            elevation: 0,
+        };
+         let middle_left = Tile{
+            tile_type: TileType::Grass,
+            content: Content::None,
+            elevation: 0,
+        };
+         let middle = Tile{
+            tile_type: TileType::Grass,
+            content: Content::None,
+            elevation: 0,
+        };
+         let middle_right = Tile{
+            tile_type: TileType::Grass,
+            content: Content::None,
+            elevation: 0,
+        };
+         let bottom_left = Tile{
+            tile_type: TileType::Grass,
+            content: Content::None,
+            elevation: 0,
+        };
+         let bottom = Tile{
+            tile_type: TileType::Grass,
+            content: Content::None,
+            elevation: 0,
+        };
+         let bottom_right = Tile{
+            tile_type: TileType::Grass,
+            content: Content::None,
+            elevation: 0,
+        };
+       map[0].push(top_left);
+       map[0].push(top);
+       map[0].push(top_right);
+       map[1].push(middle_left);
+       map[1].push(middle);
+       map[1].push(middle_right);
+       map[2].push(bottom_left);
+       map[2].push(bottom);
+       map[2].push(bottom_right);
+         let environmental_conditions = EnvironmentalConditions::new(&[Sunny, Rainy], 15, 12).unwrap();
+
+        let max_score = rand::random::<f32>();
+*/ 
+
 
         (map, (self.size / 2, self.size / 2), environmental_conditions, max_score, None)
     }

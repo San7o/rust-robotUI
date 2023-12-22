@@ -14,6 +14,6 @@ impl Plugin for WorldPlugin {
         app
             .add_systems(Startup, spawn_map)
             .add_systems(Update, update_map)
-           ;
+            ;
     }
 }
