@@ -17,13 +17,16 @@ use std::sync::Mutex;
 use rand::Rng;
 use crate::Timer;
 use robotics_lib::interface::where_am_i;
+use robotics_lib::world::environmental_conditions::EnvironmentalConditions;
+use robotics_lib::interface::look_at_sky;
+use robotics_lib::interface::get_score;
 
 #[derive(Resource)]
 pub struct TickTimer {
     pub timer: Timer,
 }
 
-pub struct MyRobot(pub Robot, pub Mutex<Sender<(Vec<Vec<Option<Tile>>>, (usize, usize))>>);
+pub struct MyRobot(pub Robot, pub Mutex<Sender<((Vec<Vec<Option<Tile>>>, (usize, usize)), EnvironmentalConditions, f32)>>);
 
 impl Runnable for MyRobot {
     fn process_tick(&mut self, world: &mut World) {
@@ -38,7 +41,7 @@ impl Runnable for MyRobot {
             },
             Err(_) => {},
         }
-*/
+        */
 
         // GO in random directions 
         let mut rng = rand::thread_rng();
@@ -94,6 +97,8 @@ impl MyRobot {
     fn go_ui(&mut self, world: &mut World, direction: Direction) {
         let _ = go(self, world, direction);
         let view = where_am_i(self, world);
-        let _ = self.1.lock().unwrap().send(view);
+        let condition = look_at_sky(world);
+        let score = get_score(world);
+        let _ = self.1.lock().unwrap().send((view, condition, score));
     }
 }

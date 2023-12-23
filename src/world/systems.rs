@@ -22,6 +22,7 @@ use robotics_lib::runner::Runnable;
 use crate::world::components::TileDraw;
 use crate::world::components::GridDraw;
 use crate::world::components::ContentDraw;
+use robotics_lib::world::environmental_conditions::EnvironmentalConditions;
 
 pub fn spawn_map(
     mut commands: Commands,
@@ -186,9 +187,11 @@ pub fn update_map(
     if let None = res {
         return;
     }
-    let (map, (robot_x, robot_y)) = res.unwrap();
+    let ((map, (robot_x, robot_y)), environmental_conditions, score) = res.unwrap();
     let map_size = world.world_size;
-    
+    world.environmental_conditions = environmental_conditions;
+    world.score = score;
+    world.elevation = map[1][1].clone().unwrap().elevation; 
     //
     // Draw Tiles ---------------------------------------------
     //

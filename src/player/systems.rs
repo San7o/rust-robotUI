@@ -126,7 +126,7 @@ pub fn unpause_tick(
 
 pub fn tick_loop (
     mut world_res: ResMut<WorldRes>,
-    mut runner_query: NonSendMut<Runner>,
+    mut runner_res: NonSendMut<Runner>,
     mut timer: ResMut<TickTimer>,
     time: Res<Time>,
 ) {
@@ -134,9 +134,9 @@ pub fn tick_loop (
     timer.timer.tick(time.delta());
 
     if timer.timer.finished() {
-        let _ = runner_query.game_tick();
+        let _ = runner_res.game_tick();
         
-        let robot = runner_query.get_robot();
+        let robot = runner_res.get_robot();
         // Update player coordinates
         let coordinates = robot.get_coordinate();
         world_res.player_x = coordinates.get_row();
