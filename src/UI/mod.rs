@@ -17,6 +17,9 @@ impl Plugin for UIPlugin {
            .add_systems(Update,
                 (
                     update_bottom_bar,
+                    interact_with_play_tick_button,
+                    interact_with_pause_button,
+                    interact_with_double_speed_button,
                 )
                 .run_if(in_state(AppState::Game))
             )

@@ -29,7 +29,7 @@ pub struct TopLeftUI{}
 
 
 #[derive(Component)]
-pub struct PlayButton {}
+pub struct PlayTickButton {}
 
 
 #[derive(Component)]

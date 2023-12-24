@@ -174,7 +174,7 @@ pub fn build_ui(
                         justify_content: JustifyContent::Start,
                         align_self: AlignSelf::Start,
                         align_items: AlignItems::End,
-                        column_gap: Val::Px(8.0),
+                        column_gap: Val::Px(4.0),
                         ..default()
                     },
                     // background_color: NORMAL_BUTTON_COLOR.into(),
@@ -189,8 +189,8 @@ pub fn build_ui(
                 (
                     ButtonBundle{
                         style: Style{
-                        width: Val::Px(50.0),
-                        height: Val::Px(50.0),
+                        width: Val::Px(40.0),
+                        height: Val::Px(40.0),
                         flex_direction: FlexDirection::Row,
                         justify_content: JustifyContent::Start,
                         align_self: AlignSelf::End,
@@ -214,12 +214,83 @@ pub fn build_ui(
                             height: Val::Px(40.0),
                             ..default()
                         },
-                        image: asset_server.load("robot_pixelart.png").into(),
+                        image: asset_server.load("pause_button.png").into(),
                         ..default()
                     }
                 );
             });
 
+             // Play Button
+            parent.spawn(
+                (
+                    ButtonBundle{
+                        style: Style{
+                        width: Val::Px(40.0),
+                        height: Val::Px(40.0),
+                        flex_direction: FlexDirection::Row,
+                        justify_content: JustifyContent::Start,
+                        align_self: AlignSelf::End,
+                        align_items: AlignItems::End,
+                        column_gap: Val::Px(8.0),
+                        ..default()
+                    },
+
+                        background_color: NORMAL_BUTTON_COLOR.into(),
+                        ..default()
+                    },
+                    PlayTickButton{},
+                )
+            )
+            .with_children(|parent| {
+                // Text 
+                parent.spawn(
+                    ImageBundle {
+                        style: Style {
+                            width: Val::Px(40.0),
+                            height: Val::Px(40.0),
+                            ..default()
+                        },
+                        image: asset_server.load("play_button.png").into(),
+                        ..default()
+                    }
+                );
+            });
+
+             // Play Fast Button
+            parent.spawn(
+                (
+                    ButtonBundle{
+                        style: Style{
+                        width: Val::Px(40.0),
+                        height: Val::Px(40.0),
+                        flex_direction: FlexDirection::Row,
+                        justify_content: JustifyContent::Start,
+                        align_self: AlignSelf::End,
+                        align_items: AlignItems::End,
+                        column_gap: Val::Px(8.0),
+                        ..default()
+                    },
+
+                        background_color: NORMAL_BUTTON_COLOR.into(),
+                        ..default()
+                    },
+                    DoubleSpeedButton{},
+                )
+            )
+            .with_children(|parent| {
+                // Text 
+                parent.spawn(
+                    ImageBundle {
+                        style: Style {
+                            width: Val::Px(40.0),
+                            height: Val::Px(40.0),
+                            ..default()
+                        },
+                        image: asset_server.load("playfast_button.png").into(),
+                        ..default()
+                    }
+                );
+            });
         });
 
     })
