@@ -5,6 +5,14 @@ pub struct UIDraw {}
 
 
 #[derive(Component)]
+pub struct TimeText {}
+
+
+#[derive(Component)]
+pub struct MeteoImage {}
+
+
+#[derive(Component)]
 pub struct ScoreText {}
 
 
@@ -38,4 +46,5 @@ pub struct PauseButton {}
 
 #[derive(Component)]
 pub struct DoubleSpeedButton {}
+
 

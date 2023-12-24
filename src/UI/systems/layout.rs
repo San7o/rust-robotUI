@@ -3,6 +3,7 @@ use crate::UI::components::*;
 use crate::UI::styles::*;
 use crate::WorldRes;
 use robotics_lib::runner::Runner;
+use robotics_lib::world::environmental_conditions::WeatherType;
 
 pub fn spawn_ui_menu(
     mut commands: Commands,
@@ -63,13 +64,47 @@ pub fn build_ui(
                     column_gap: Val::Px(8.0),
                     ..default()
                 },
-                // background_color: NORMAL_BUTTON_COLOR.into(),
+                //background_color: NORMAL_BUTTON_COLOR.into(),
                 ..default()
             },
             UIDraw{},
             )
         )
         .with_children(|parent| {
+            
+            // Environmental Condition
+            parent.spawn((
+                    ImageBundle {
+                        style: Style {
+                            width: Val::Px(40.0),
+                            height: Val::Px(40.0),
+                            ..default()
+                        },
+                        image: asset_server.load("pause_button.png").into(),
+                        ..default()
+                    },
+                    MeteoImage{},
+                ));
+           
+            // Time 
+            parent.spawn((
+                TextBundle {
+                    text: Text {
+                        sections: vec![
+                            TextSection::new(
+                                "Time: ",
+                                get_button_text_style(asset_server),
+                            )
+                        ],
+                        alignment: TextAlignment::Center,
+                        ..default()
+                    },
+                    ..default()
+                },
+                TimeText{},  
+            ));
+
+
             // Score 
             parent.spawn((
                 TextBundle {
@@ -88,7 +123,7 @@ pub fn build_ui(
                 ScoreText{},  
             ));
 
-            // Score 
+            // X Coordinate 
             parent.spawn((
                 TextBundle {
                     text: Text {
@@ -106,7 +141,7 @@ pub fn build_ui(
                 XText{},
             ));
 
-            // Score 
+            // Y Coordinate 
             parent.spawn((
                 TextBundle {
                     text: Text {
@@ -124,7 +159,7 @@ pub fn build_ui(
                 YText{},
             ));
 
-            // Score 
+            // Elevation 
             parent.spawn((
                 TextBundle {
                     text: Text {
@@ -142,7 +177,7 @@ pub fn build_ui(
                 ElevationText{},
             ));
             
-            // Score 
+            // Energy 
             parent.spawn((
                 TextBundle {
                     text: Text {
@@ -302,12 +337,15 @@ pub fn build_ui(
 pub fn update_bottom_bar(
     runner_res: NonSendMut<Runner>,
     world: Res<WorldRes>,
+    mut asset_server: Res<AssetServer>,
     mut set: ParamSet<(
         Query<&mut Text, With<ScoreText>>,
         Query<&mut Text, With<XText>>,
         Query<&mut Text, With<YText>>,
         Query<&mut Text, With<ElevationText>>,
         Query<&mut Text, With<EnergyText>>,
+        Query<&mut UiImage, With<MeteoImage>>,
+        Query<&mut Text, With<TimeText>>,
     )>,
 ) {
     let robot = runner_res.get_robot();
@@ -332,6 +370,29 @@ pub fn update_bottom_bar(
    if let Ok(mut old_text) = set.p4().get_single_mut() {
         old_text.sections[0].value = format!("Energy: {}", energy);
     }
+    if let Ok(mut old_image) = set.p5().get_single_mut() {
+        match world.environmental_conditions.get_weather_condition() {
+            WeatherType::Sunny => {
+                *old_image = asset_server.load("sunny.png").into();
+            },
+            WeatherType::Rainy => {
+                *old_image = asset_server.load("rainy.png").into();
+            },
+            WeatherType::Foggy => {
+                *old_image = asset_server.load("foggy.png").into();
+            },
+            WeatherType::TropicalMonsoon => {
+                *old_image = asset_server.load("tropicalmonson.png").into();
+            },
+            WeatherType::TrentinoSnow => {
+                *old_image = asset_server.load("trentinosnow.png").into();
+            },
+        }
+    }
+    if let Ok(mut old_text) = set.p6().get_single_mut() {
+        old_text.sections[0].value = format!("Time: {}", world.environmental_conditions.get_time_of_day_string());
+    }
+
 }
 
 
