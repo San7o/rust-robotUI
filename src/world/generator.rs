@@ -85,7 +85,7 @@ impl Generator for WorldGenerator {
                 row.push(Tile {
                     tile_type,
                     content,
-                    elevation: 0,
+                    elevation: 1,
                 });
             }
             map.push(row);

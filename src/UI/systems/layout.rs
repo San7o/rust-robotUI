@@ -10,7 +10,7 @@ pub fn spawn_ui_menu(
     runner_res: NonSendMut<Runner>,
     world_res: Res<WorldRes>,
 ) {
-    let main_menu_entity = build_ui(&mut commands, &asset_server, &runner_res, &world_res);
+    let ui_entity = build_ui(&mut commands, &asset_server, &runner_res, &world_res);
 }
 
 pub fn despawn_ui_menu(
@@ -30,114 +30,198 @@ pub fn build_ui(
 ) -> Entity {
 
     let main_menu_entity = commands.spawn(
-        (
+        
+         NodeBundle {
+            style: Style{
+                width: Val::Percent(100.0),
+                height: Val::Percent(100.0),
+                flex_direction: FlexDirection::Column,
+                justify_content: JustifyContent::Start,
+                align_self: AlignSelf::End,
+                align_items: AlignItems::Center,
+                column_gap: Val::Px(8.0),
+                ..default()
+            },
+            //background_color: NORMAL_BUTTON_COLOR.into(),
+            ..default()
+        }
+    ).with_children( |parent| {
+
+        //
+        // INFO UI ----------------------
+        //
+        parent.spawn(
+            (
             NodeBundle {
                 style: Style{
                     width: Val::Percent(100.0),
-                    height: Val::Px(17.0),
+                    height: Val::Percent(50.0),
                     flex_direction: FlexDirection::Row,
                     justify_content: JustifyContent::Start,
-                    align_self: AlignSelf::End,
-                    align_items: AlignItems::Center,
+                    align_self: AlignSelf::Start,
+                    align_items: AlignItems::Start,
                     column_gap: Val::Px(8.0),
                     ..default()
                 },
-                background_color: NORMAL_BUTTON_COLOR.into(),
+                // background_color: NORMAL_BUTTON_COLOR.into(),
                 ..default()
             },
             UIDraw{},
+            )
         )
-    )
-    .with_children(|parent| {
-        // Score 
-        parent.spawn((
-            TextBundle {
-                text: Text {
-                    sections: vec![
-                        TextSection::new(
-                            "Score: ",
-                            get_button_text_style(asset_server),
-                        )
-                    ],
-                    alignment: TextAlignment::Center,
+        .with_children(|parent| {
+            // Score 
+            parent.spawn((
+                TextBundle {
+                    text: Text {
+                        sections: vec![
+                            TextSection::new(
+                                "Score: ",
+                                get_button_text_style(asset_server),
+                            )
+                        ],
+                        alignment: TextAlignment::Center,
+                        ..default()
+                    },
                     ..default()
                 },
-                ..default()
-            },
-            ScoreText{},  
-        ));
+                ScoreText{},  
+            ));
 
-        // Score 
-        parent.spawn((
-            TextBundle {
-                text: Text {
-                    sections: vec![
-                        TextSection::new(
-                            "X: ",
-                            get_button_text_style(asset_server),
-                        )
-                    ],
-                    alignment: TextAlignment::Center,
+            // Score 
+            parent.spawn((
+                TextBundle {
+                    text: Text {
+                        sections: vec![
+                            TextSection::new(
+                                "X: ",
+                                get_button_text_style(asset_server),
+                            )
+                        ],
+                        alignment: TextAlignment::Center,
+                        ..default()
+                    },
                     ..default()
                 },
-                ..default()
-            },
-            XText{},
-        ));
+                XText{},
+            ));
 
-        // Score 
-        parent.spawn((
-            TextBundle {
-                text: Text {
-                    sections: vec![
-                        TextSection::new(
-                            "Y: ",
-                            get_button_text_style(asset_server),
-                        )
-                    ],
-                    alignment: TextAlignment::Center,
+            // Score 
+            parent.spawn((
+                TextBundle {
+                    text: Text {
+                        sections: vec![
+                            TextSection::new(
+                                "Y: ",
+                                get_button_text_style(asset_server),
+                            )
+                        ],
+                        alignment: TextAlignment::Center,
+                        ..default()
+                    },
                     ..default()
                 },
-                ..default()
-            },
-            YText{},
-        ));
+                YText{},
+            ));
 
-        // Score 
-        parent.spawn((
-            TextBundle {
-                text: Text {
-                    sections: vec![
-                        TextSection::new(
-                            "Elevation: ",
-                            get_button_text_style(asset_server),
-                        )
-                    ],
-                    alignment: TextAlignment::Center,
+            // Score 
+            parent.spawn((
+                TextBundle {
+                    text: Text {
+                        sections: vec![
+                            TextSection::new(
+                                "Elevation: ",
+                                get_button_text_style(asset_server),
+                            )
+                        ],
+                        alignment: TextAlignment::Center,
+                        ..default()
+                    },
                     ..default()
                 },
-                ..default()
-            },
-            ElevationText{},
-        ));
-        
-        // Score 
-        parent.spawn((
-            TextBundle {
-                text: Text {
-                    sections: vec![
-                        TextSection::new(
-                            "Energy: ",
-                            get_button_text_style(asset_server),
-                        )
-                    ],
-                    alignment: TextAlignment::Center,
+                ElevationText{},
+            ));
+            
+            // Score 
+            parent.spawn((
+                TextBundle {
+                    text: Text {
+                        sections: vec![
+                            TextSection::new(
+                                "Energy: ",
+                                get_button_text_style(asset_server),
+                            )
+                        ],
+                        alignment: TextAlignment::Center,
+                        ..default()
+                    },
                     ..default()
                 },
-                ..default()
-            },
-            EnergyText{},
-        ));
+                EnergyText{},
+            ));
+        });
+
+        //
+        // SPEED UI ------------------------------
+        //
+        parent.spawn(
+            (
+                NodeBundle {
+                    style: Style{
+                        width: Val::Percent(100.0),
+                        height: Val::Percent(50.0),
+                        flex_direction: FlexDirection::Row,
+                        justify_content: JustifyContent::Start,
+                        align_self: AlignSelf::Start,
+                        align_items: AlignItems::End,
+                        column_gap: Val::Px(8.0),
+                        ..default()
+                    },
+                    // background_color: NORMAL_BUTTON_COLOR.into(),
+                    ..default()
+                },
+                TopLeftUI{},
+            )
+        )
+        .with_children(|parent| {
+            // Pause Button
+            parent.spawn(
+                (
+                    ButtonBundle{
+                        style: Style{
+                        width: Val::Px(50.0),
+                        height: Val::Px(50.0),
+                        flex_direction: FlexDirection::Row,
+                        justify_content: JustifyContent::Start,
+                        align_self: AlignSelf::End,
+                        align_items: AlignItems::End,
+                        column_gap: Val::Px(8.0),
+                        ..default()
+                    },
+
+                        background_color: NORMAL_BUTTON_COLOR.into(),
+                        ..default()
+                    },
+                    PauseButton{},
+                )
+            )
+            .with_children(|parent| {
+                // Text 
+                parent.spawn(
+                    ImageBundle {
+                        style: Style {
+                            width: Val::Px(40.0),
+                            height: Val::Px(40.0),
+                            ..default()
+                        },
+                        image: asset_server.load("robot_pixelart.png").into(),
+                        ..default()
+                    }
+                );
+            });
+
+        });
+
     })
     .id(); 
 
@@ -177,4 +261,67 @@ pub fn update_bottom_bar(
    if let Ok(mut old_text) = set.p4().get_single_mut() {
         old_text.sections[0].value = format!("Energy: {}", energy);
     }
+}
+
+
+pub fn build_top_left_ui(
+    commands: &mut Commands,
+    asset_server: &Res<AssetServer>,
+) -> Entity {
+
+    let top_left_entity = commands.spawn(
+        (
+            NodeBundle {
+                style: Style{
+                    width: Val::Percent(100.0),
+                    height: Val::Px(25.0),
+                    flex_direction: FlexDirection::Row,
+                    justify_content: JustifyContent::Start,
+                    align_self: AlignSelf::Start,
+                    align_items: AlignItems::Center,
+                    column_gap: Val::Px(8.0),
+                    ..default()
+                },
+                background_color: NORMAL_BUTTON_COLOR.into(),
+                ..default()
+            },
+            TopLeftUI{},
+        )
+    )
+    .with_children(|parent| {
+        // Pause Button
+        parent.spawn(
+            (
+                ButtonBundle{
+                    style: BUTTON_STYLE,
+                    background_color: NORMAL_BUTTON_COLOR.into(),
+                    ..default()
+                },
+                PauseButton{},
+            )
+        )
+        .with_children(|parent| {
+            // Text 
+            parent.spawn(
+                TextBundle {
+                    text: Text {
+                        sections: vec![
+                            TextSection::new(
+                                "Pause",
+                                get_button_text_style(asset_server),
+                            )
+                        ],
+                        alignment: TextAlignment::Center,
+                        ..default()
+                    },
+                    ..default()
+                },
+            );
+        });
+
+
+    })
+    .id(); 
+
+    top_left_entity
 }

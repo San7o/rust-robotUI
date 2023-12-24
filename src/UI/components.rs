@@ -24,5 +24,18 @@ pub struct ElevationText {}
 pub struct EnergyText {}
 
 
+#[derive(Component)]
+pub struct TopLeftUI{}
 
+
+#[derive(Component)]
+pub struct PlayButton {}
+
+
+#[derive(Component)]
+pub struct PauseButton {}
+
+
+#[derive(Component)]
+pub struct DoubleSpeedButton {}
 
