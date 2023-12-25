@@ -1,8 +1,8 @@
 # RobotUI
 
-![screen1](-/assets/screenshots/screen1.png)
-![screen2](-/assets/screenshots/screen2.png)
-![screen3](-/assets/screenshots/screen3.png)
+![screen1](./assets/screenshots/screen1.png)
+![screen2](./assets/screenshots/screen2.png)
+![screen3](./assets/screenshots/screen3.png)
 
 ### Features
 
