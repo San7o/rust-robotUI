@@ -21,6 +21,12 @@ use robotics_lib::world::environmental_conditions::EnvironmentalConditions;
 use robotics_lib::interface::look_at_sky;
 use robotics_lib::interface::get_score;
 use robotics_lib::interface::destroy;
+use std::collections::HashMap;
+use robotics_lib::utils::LibError;
+use robotics_lib::interface::discover_tiles;
+use robotics_lib::interface::one_direction_view;
+use std::time::Duration;
+use std::thread;
 
 #[derive(Resource)]
 pub struct TickTimer {
@@ -55,10 +61,33 @@ impl Runnable for MyRobot {
         };
         match go_allowed(self, &world, &dir) {
             Ok(_) => {
-                self.go_ui(world, dir);
+                self.go_ui(world, dir.clone());
             },
             Err(_) => {},
         }
+
+        /*
+        // Make it sprint 
+        match go_allowed(self, &world, &dir) {
+            Ok(_) => {
+                self.go_ui(world, dir.clone());
+            },
+            Err(_) => {},
+        }
+        match go_allowed(self, &world, &dir) {
+            Ok(_) => {
+                self.go_ui(world, dir.clone());
+            },
+            Err(_) => {},
+        }
+        match go_allowed(self, &world, &dir) {
+            Ok(_) => {
+                self.go_ui(world, dir.clone());
+            },
+            Err(_) => {},
+        }
+        */
+
 
         // Pickup objects
         let _ = destroy(self, world, Direction::Up);
@@ -68,6 +97,9 @@ impl Runnable for MyRobot {
         let view = where_am_i(self, world);
         let _ = self.1.lock().unwrap().send(view);
         */
+
+        let to_discover = vec![(0, 2), (3, 3)];
+        let _ = self.discover_tiles_ui(world, &to_discover);
 
     }
 
@@ -105,4 +137,62 @@ impl MyRobot {
         let score = get_score(world);
         let _ = self.1.lock().unwrap().send((view, condition, score));
     }
+
+    fn discover_tiles_ui(&mut self, world: &mut World, to_discover: &[(usize, usize)]) -> Result<HashMap<(usize, usize), Option<Tile>>, LibError> {
+        let discovered_hash = discover_tiles(self, world, &to_discover)?;
+        let mut empty_vec: Vec<Vec<Option<Tile>>> = vec![vec![None, None, None], vec![None, None, None], vec![None, None, None]];
+        
+        let condition = look_at_sky(world);
+        let score = get_score(world);
+
+        for (x, y) in to_discover {
+            empty_vec[1][1] = discovered_hash.get(&(*x, *y)).unwrap().clone();
+            let view = (empty_vec.clone(), (*x, *y));
+            let _ = self.1.lock().unwrap().send((view, condition.clone(), score));
+        }
+        Ok(discovered_hash)
+    }
+
+    /*
+    fn one_direction_view_ui(&mut self, world: &World, direction: Direction, distance: usize) -> Result<Vec<Vec<Tile>>, LibError> {
+        
+        if distance <= 0 {
+            Err(LibError::OperationNotAllowed)
+        }
+
+        let view = one_direction_view(self, world, direction, distance)?;
+     
+        let condition = look_at_sky(world);
+        let score = get_score(world);
+
+
+        match direction {
+            Direction::Up => {
+                if distance == 1 {
+                    let new_view = vec![view.0, vec![], vec![]];
+                } 
+                else if distance == 2 {
+
+                }
+                // Caso generale
+                else {
+
+                }
+            },
+            Direction::Down => {
+
+            },
+            Direction::Left => {
+
+            },
+            Direction::Right => {
+
+            },
+        }
+
+
+
+        Ok(view)
+    }
+    */
 }

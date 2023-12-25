@@ -473,8 +473,8 @@ pub fn update_bottom_bar(
                     old_text.sections[index] = new_text;
                 }
 
-                }
-           }
+            }
+         }
 
     }
 
