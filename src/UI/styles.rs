@@ -16,7 +16,7 @@ pub const BUTTON_STYLE: Style = {
 pub fn get_button_text_style(asset_server: &Res<AssetServer>) -> TextStyle {
     TextStyle {
         font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-        font_size: 30.0,
+        font_size: 20.0,
         color: Color::WHITE,
     }
 }

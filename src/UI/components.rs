@@ -5,6 +5,10 @@ pub struct UIDraw {}
 
 
 #[derive(Component)]
+pub struct InventoryDraw {}
+
+
+#[derive(Component)]
 pub struct TimeText {}
 
 

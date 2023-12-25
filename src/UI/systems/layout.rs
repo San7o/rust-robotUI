@@ -71,129 +71,190 @@ pub fn build_ui(
             )
         )
         .with_children(|parent| {
-            
-            // Environmental Condition
-            parent.spawn((
-                    ImageBundle {
-                        style: Style {
-                            width: Val::Px(40.0),
-                            height: Val::Px(40.0),
+            // Splitting the screen again
+            // Left: data
+            // Right: Inventory
+               
+            // DATA
+            parent.spawn(
+                NodeBundle {
+                    style: Style{
+                        width: Val::Percent(100.0),
+                        height: Val::Percent(100.0),
+                        flex_direction: FlexDirection::Column,
+                        justify_content: JustifyContent::Start,
+                        align_self: AlignSelf::End,
+                        align_items: AlignItems::Start,
+                        column_gap: Val::Px(8.0),
+                        ..default()
+                    },
+                    //background_color: NORMAL_BUTTON_COLOR.into(),
+                    ..default()
+                }
+            ).with_children( |parent| {
+
+                // Environmental Condition
+                parent.spawn((
+                        ImageBundle {
+                            style: Style {
+                                width: Val::Px(40.0),
+                                height: Val::Px(40.0),
+                                ..default()
+                            },
+                            image: asset_server.load("pause_button.png").into(),
                             ..default()
                         },
-                        image: asset_server.load("pause_button.png").into(),
+                        MeteoImage{},
+                    ));
+                
+                // Time 
+                parent.spawn((
+                    TextBundle {
+                        text: Text {
+                            sections: vec![
+                                TextSection::new(
+                                    "Time: ",
+                                    get_button_text_style(asset_server),
+                                )
+                            ],
+                            alignment: TextAlignment::Center,
+                            ..default()
+                        },
                         ..default()
                     },
-                    MeteoImage{},
+                    TimeText{},  
                 ));
-           
-            // Time 
-            parent.spawn((
-                TextBundle {
-                    text: Text {
-                        sections: vec![
-                            TextSection::new(
-                                "Time: ",
-                                get_button_text_style(asset_server),
-                            )
-                        ],
-                        alignment: TextAlignment::Center,
-                        ..default()
-                    },
-                    ..default()
-                },
-                TimeText{},  
-            ));
 
 
-            // Score 
-            parent.spawn((
-                TextBundle {
-                    text: Text {
-                        sections: vec![
-                            TextSection::new(
-                                "Score: ",
-                                get_button_text_style(asset_server),
-                            )
-                        ],
-                        alignment: TextAlignment::Center,
+                // Score 
+                parent.spawn((
+                    TextBundle {
+                        text: Text {
+                            sections: vec![
+                                TextSection::new(
+                                    "Score: ",
+                                    get_button_text_style(asset_server),
+                                )
+                            ],
+                            alignment: TextAlignment::Center,
+                            ..default()
+                        },
                         ..default()
                     },
-                    ..default()
-                },
-                ScoreText{},  
-            ));
+                    ScoreText{},  
+                ));
 
-            // X Coordinate 
-            parent.spawn((
-                TextBundle {
-                    text: Text {
-                        sections: vec![
-                            TextSection::new(
-                                "X: ",
-                                get_button_text_style(asset_server),
-                            )
-                        ],
-                        alignment: TextAlignment::Center,
+                // X Coordinate 
+                parent.spawn((
+                    TextBundle {
+                        text: Text {
+                            sections: vec![
+                                TextSection::new(
+                                    "X: ",
+                                    get_button_text_style(asset_server),
+                                )
+                            ],
+                            alignment: TextAlignment::Center,
+                            ..default()
+                        },
                         ..default()
                     },
-                    ..default()
-                },
-                XText{},
-            ));
+                    XText{},
+                ));
 
-            // Y Coordinate 
-            parent.spawn((
-                TextBundle {
-                    text: Text {
-                        sections: vec![
-                            TextSection::new(
-                                "Y: ",
-                                get_button_text_style(asset_server),
-                            )
-                        ],
-                        alignment: TextAlignment::Center,
+                // Y Coordinate 
+                parent.spawn((
+                    TextBundle {
+                        text: Text {
+                            sections: vec![
+                                TextSection::new(
+                                    "Y: ",
+                                    get_button_text_style(asset_server),
+                                )
+                            ],
+                            alignment: TextAlignment::Center,
+                            ..default()
+                        },
                         ..default()
                     },
-                    ..default()
-                },
-                YText{},
-            ));
+                    YText{},
+                ));
 
-            // Elevation 
-            parent.spawn((
-                TextBundle {
-                    text: Text {
-                        sections: vec![
-                            TextSection::new(
-                                "Elevation: ",
-                                get_button_text_style(asset_server),
-                            )
-                        ],
-                        alignment: TextAlignment::Center,
+                // Elevation 
+                parent.spawn((
+                    TextBundle {
+                        text: Text {
+                            sections: vec![
+                                TextSection::new(
+                                    "Elevation: ",
+                                    get_button_text_style(asset_server),
+                                )
+                            ],
+                            alignment: TextAlignment::Center,
+                            ..default()
+                        },
                         ..default()
                     },
-                    ..default()
-                },
-                ElevationText{},
-            ));
-            
-            // Energy 
-            parent.spawn((
-                TextBundle {
-                    text: Text {
-                        sections: vec![
-                            TextSection::new(
-                                "Energy: ",
-                                get_button_text_style(asset_server),
-                            )
-                        ],
-                        alignment: TextAlignment::Center,
+                    ElevationText{},
+                ));
+                
+                // Energy 
+                parent.spawn((
+                    TextBundle {
+                        text: Text {
+                            sections: vec![
+                                TextSection::new(
+                                    "Energy: ",
+                                    get_button_text_style(asset_server),
+                                )
+                            ],
+                            alignment: TextAlignment::Center,
+                            ..default()
+                        },
                         ..default()
                     },
+                    EnergyText{},
+                ));
+            });
+
+
+            // INVENTORY
+            parent.spawn(
+                NodeBundle {
+                    style: Style{
+                        width: Val::Percent(100.0),
+                        height: Val::Percent(100.0),
+                        flex_direction: FlexDirection::Column,
+                        justify_content: JustifyContent::Start,
+                        align_self: AlignSelf::End,
+                        align_items: AlignItems::End,
+                        column_gap: Val::Px(8.0),
+                        ..default()
+                    },
+                    //background_color: NORMAL_BUTTON_COLOR.into(),
                     ..default()
-                },
-                EnergyText{},
-            ));
+                }
+            ).with_children( |parent| {
+
+                parent.spawn((
+                    TextBundle {
+                        text: Text {
+                            sections: vec![
+                                TextSection::new(
+                                    "Inventory\n",
+                                    get_button_text_style(asset_server),
+                                )
+                            ],
+                            alignment: TextAlignment::Center,
+                            ..default()
+                        },
+                        ..default()
+                    },
+                    InventoryDraw{},
+                ));
+                
+            });
+
         });
 
         //
@@ -346,6 +407,7 @@ pub fn update_bottom_bar(
         Query<&mut Text, With<EnergyText>>,
         Query<&mut UiImage, With<MeteoImage>>,
         Query<&mut Text, With<TimeText>>,
+        Query<&mut Text, With<InventoryDraw>>
     )>,
 ) {
     let robot = runner_res.get_robot();
@@ -392,6 +454,30 @@ pub fn update_bottom_bar(
     if let Ok(mut old_text) = set.p6().get_single_mut() {
         old_text.sections[0].value = format!("Time: {}", world.environmental_conditions.get_time_of_day_string());
     }
+    if let Ok(mut old_text) = set.p7().get_single_mut() {
+
+        // Getting the items in the inventory
+        let hash_contents = robot.get_backpack().get_contents();
+        let mut index = 0;
+        for (content, quantity) in hash_contents {
+            if *quantity > 0 {
+                index += 1;
+                let new_text = TextSection::new(
+                                        format!("{} {}\n", content, quantity),
+                                        get_button_text_style(&asset_server),
+                                );
+                if old_text.sections.len() <= index {
+                    old_text.sections.push(new_text); 
+                }
+                else {
+                    old_text.sections[index] = new_text;
+                }
+
+                }
+           }
+
+    }
+
 
 }
 

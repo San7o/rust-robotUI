@@ -20,6 +20,7 @@ use robotics_lib::interface::where_am_i;
 use robotics_lib::world::environmental_conditions::EnvironmentalConditions;
 use robotics_lib::interface::look_at_sky;
 use robotics_lib::interface::get_score;
+use robotics_lib::interface::destroy;
 
 #[derive(Resource)]
 pub struct TickTimer {
@@ -58,6 +59,9 @@ impl Runnable for MyRobot {
             },
             Err(_) => {},
         }
+
+        // Pickup objects
+        let _ = destroy(self, world, Direction::Up);
       
         /*
         // Do nothing
