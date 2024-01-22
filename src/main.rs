@@ -49,7 +49,7 @@ use std::sync::Mutex;
 // use worldgen_unwrap::public::WorldgeneratorUnwrap;
 use std::path::PathBuf;
 
-const WORLD_SIZE : usize = 20;
+const WORLD_SIZE : usize = 300;
 
 #[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
 pub enum AppState {
@@ -88,9 +88,9 @@ fn main() {
     //let mut generator = WorldGenerator::init(WORLD_SIZE);
     
     // --- Actual generator
-    
-    // Generate 
+   
     /*
+    // Generate 
     let seed = 751776;
     let mut generator: OxAgWorldGenerator = OxAgWorldGeneratorBuilder::new()
         .set_seed(seed)
@@ -104,7 +104,8 @@ fn main() {
 
     //let mut generator = generator.gen();
     generator.save("worlds/save.json").unwrap();
-    */
+    */ 
+
     // Load 
     let mut generator = OxAgWorldGeneratorBuilder::new()
         .load("worlds/save.json")
@@ -112,7 +113,6 @@ fn main() {
    
     // Unwrap generator
     //let mut generator = WorldgeneratorUnwrap::init(false, Some(PathBuf::from("large_world.bin")));
-
 
 
 
