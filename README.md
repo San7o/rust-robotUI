@@ -1,8 +1,25 @@
 # RobotUI
 
+My individual submission, made with [Bevy game engine](https://github.com/bevyengine/bevy) ❤️
+
 ![screen1](./assets/screenshots/screen1.png)
 ![screen2](./assets/screenshots/screen2.png)
 ![screen3](./assets/screenshots/screen3.png)
+
+# Keys
+
+- 'w / up_arrow' move up 
+- 's / down_arrow' move down 
+- 'a / left_arrow' move left 
+- 'd / right_arrow' move right 
+- 'f' lock camera to player 
+- 'p' pause game 
+- 'o' unpause game
+- 'z' double speed 
+- 'x' normal speed 
+- '-' zoom out camera 
+- '+' zoom in camera
+- 'esc' close game 
 
 ### Features
 
@@ -14,7 +31,7 @@
 - [x] Add content over the tile
 - [x] Change simulation speed
 - [x] Graphics Overall
-- [x] Vedere a distanza (discover_tiles e one_direction_view)
+- [x] Vedere a distanza (discover_tiles)
 - [x] UI
   - [x] Main Menu
   - [x] Inventory
