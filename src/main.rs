@@ -33,10 +33,21 @@ use robotics_lib::runner::Robot;
 use robotics_lib::world::tile::Tile;
 use robotics_lib::world::environmental_conditions::EnvironmentalConditions;
 use robotics_lib::world::environmental_conditions::WeatherType;
+use oxagworldgenerator::world_generator::world_generator_builder::OxAgWorldGeneratorBuilder;
+use oxagworldgenerator::world_generator::OxAgWorldGenerator;
+use robotics_lib::world::world_generator::Generator;
+use oxagworldgenerator::world_generator::content_options::OxAgContentOptions;
+use oxagworldgenerator::world_generator::presets::content_presets::OxAgContentPresets;
+use oxagworldgenerator::world_generator::presets::environmental_presets::OxAgEnvironmentalConditionPresets;
+use oxagworldgenerator::world_generator::presets::tile_type_presets::OxAgTileTypePresets;
+use robotics_lib::world::tile::Content;
 
 use std::sync::mpsc;
 use std::thread;
 use std::sync::Mutex;
+
+// use worldgen_unwrap::public::WorldgeneratorUnwrap;
+use std::path::PathBuf;
 
 const WORLD_SIZE : usize = 20;
 
@@ -69,9 +80,44 @@ fn main() {
     struct Tool;
     impl Tools for Tool {}
     let tools = vec![Tool];
-    let mut generator = WorldGenerator::init(WORLD_SIZE);
-    let run = Runner::new(Box::new(r), &mut generator).unwrap(); // TODO: link tools
 
+
+    // Generating the world 
+    
+    // Simple generator  
+    //let mut generator = WorldGenerator::init(WORLD_SIZE);
+    
+    // --- Actual generator
+    
+    // Generate 
+    /*
+    let seed = 751776;
+    let mut generator: OxAgWorldGenerator = OxAgWorldGeneratorBuilder::new()
+        .set_seed(seed)
+        .set_size(WORLD_SIZE)
+        .set_environmental_conditions_from_preset(OxAgEnvironmentalConditionPresets::Sunny)
+        .set_tile_type_options_from_preset(OxAgTileTypePresets::Default)
+        .set_content_options_from_preset(OxAgContentPresets::Default)
+        .set_with_info(true)
+        .build()
+        .unwrap();
+
+    //let mut generator = generator.gen();
+    generator.save("worlds/save.json").unwrap();
+    */
+    // Load 
+    let mut generator = OxAgWorldGeneratorBuilder::new()
+        .load("worlds/save.json")
+        .unwrap();
+   
+    // Unwrap generator
+    //let mut generator = WorldgeneratorUnwrap::init(false, Some(PathBuf::from("large_world.bin")));
+
+
+
+
+   println!("Ciao");
+    let run = Runner::new(Box::new(r), &mut generator).unwrap(); // TODO: link tools
     App::new()
         // Resources 
         .insert_resource(wr) // The World 
@@ -108,5 +154,4 @@ fn main() {
                 transition_to_game_state,
             )
         ).run();
-
 }

@@ -43,4 +43,6 @@ bevy = { version = "0.11.3", features = [
     "webgl2",
 ]}
 bevy_kira_audio = { version = "0.17.0", features = ["ogg", "mp3"] }
-
+# worldgen_unwrap = { version = "0.1.2", registry = "kellnr" }
+# oxagworldgenerator = { version = "0.1.0", registry = "kellnr" }
+oxagworldgenerator = { git = "https://github.com/xupremix/oxagworldgenerator" }
