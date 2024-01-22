@@ -116,7 +116,6 @@ fn main() {
 
 
 
-   println!("Ciao");
     let run = Runner::new(Box::new(r), &mut generator).unwrap(); // TODO: link tools
     App::new()
         // Resources 

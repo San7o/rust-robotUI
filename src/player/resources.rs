@@ -37,8 +37,6 @@ pub struct MyRobot(pub Robot, pub Mutex<Sender<((Vec<Vec<Option<Tile>>>, (usize,
 
 impl Runnable for MyRobot {
     fn process_tick(&mut self, world: &mut World) {
-        println!("CIAOOOO");
-
         /*
         // Go a direction
         let dir = Direction::Down;
